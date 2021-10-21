@@ -47,28 +47,28 @@ function MostrarKadu({navigation}) {
             <Text style={styles.infoPrincipal}>Tema do dia:</Text>
             <Text style={styles.subTitulo}>referencias</Text>
             <View style={styles.vitrine}>
-                <TouchableOpacity style={styles.kadu} onPress={() => navigation.navigate('perfil')}>
+                <TouchableOpacity style={styles.kadu} onPress={() => navigation.navigate('profile')}>
                     <Text style={styles.kaduTexto}>Nome do Kadu</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.kadu} onPress={() => navigation.navigate('perfil')}>
+                <TouchableOpacity style={styles.kadu} onPress={() => navigation.navigate('profile')}>
                     <Text style={styles.kaduTexto}>Nome do Kadu</Text>
                 </TouchableOpacity>   
-                <TouchableOpacity style={styles.kadu} onPress={() => navigation.navigate('perfil')}>
+                <TouchableOpacity style={styles.kadu} onPress={() => navigation.navigate('profile')}>
                     <Text style={styles.kaduTexto}>Nome do Kadu</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.kadu} onPress={() => navigation.navigate('perfil')}>
+                <TouchableOpacity style={styles.kadu} onPress={() => navigation.navigate('profile')}>
                     <Text style={styles.kaduTexto}>Nome do Kadu</Text>
                 </TouchableOpacity>  
-                <TouchableOpacity style={styles.kadu} onPress={() => navigation.navigate('perfil')}>
+                <TouchableOpacity style={styles.kadu} onPress={() => navigation.navigate('profile')}>
                     <Text style={styles.kaduTexto}>Nome do Kadu</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.kadu} onPress={() => navigation.navigate('perfil')}>
+                <TouchableOpacity style={styles.kadu} onPress={() => navigation.navigate('profile')}>
                     <Text style={styles.kaduTexto}>Nome do Kadu</Text>
                 </TouchableOpacity>   
-                <TouchableOpacity style={styles.kadu} onPress={() => navigation.navigate('perfil')}>
+                <TouchableOpacity style={styles.kadu} onPress={() => navigation.navigate('profile')}>
                     <Text style={styles.kaduTexto}>Nome do Kadu</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.kadu} onPress={() => navigation.navigate('perfil')}>
+                <TouchableOpacity style={styles.kadu} onPress={() => navigation.navigate('profile')}>
                     <Text style={styles.kaduTexto}>Nome do Kadu</Text>
                 </TouchableOpacity>   
             </View>

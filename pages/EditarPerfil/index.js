@@ -2,6 +2,9 @@ import React from 'react';
 import { ScrollView, TouchableOpacity, Text, View, TextInput } from 'react-native';
 import styles from './estilo';
 
+import { Formik } from 'formik';
+import * as yup from 'yup';
+
 // import { Container } from './styles';
 
 function EditarPerfil() {
@@ -25,7 +28,7 @@ function EditarPerfil() {
             <TextInput style={styles.input} placeholder="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" />
 
             <TouchableOpacity style={styles.botao}>
-                <Text style={styles.botao_texto} onPress={() => navigation.navigate('perfil')}>finalizar</Text>
+                <Text style={styles.botao_texto} onPress={() => navigation.navigate('profile')}>finalizar</Text>
             </TouchableOpacity>
 
             <Text></Text>
