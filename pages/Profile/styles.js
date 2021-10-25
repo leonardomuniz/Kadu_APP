@@ -9,10 +9,5 @@ export default StyleSheet.create({
         textAlign: "center"
     },
 
-    vitrine: {
-        display: "flex",
-        flexDirection: 'row',
-        flexWrap: "wrap"
-    }
 
 });

@@ -3,7 +3,7 @@ import React from 'react';
 import { Text, View } from 'react-native';
 
 import loaclStyles from './styles';
-import styles from '../../styles/GlobalStyle';
+import styles from '../../src/styles/GlobalStyle';
 
 function Loading(){
     return (

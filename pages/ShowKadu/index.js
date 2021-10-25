@@ -1,12 +1,12 @@
 import React from 'react';
 import { ScrollView, TouchableOpacity, Text, View } from 'react-native';
 import { FontAwesome5 } from '@expo/vector-icons'; 
-import styles from './estilo';
+import styles from './style';
 
 
 // import { Container } from './styles';
 
-function MostrarKadu({navigation}) {
+function ShowKadu({navigation}) {
     return (
         <ScrollView style={styles.corpo}>
             <TouchableOpacity style={styles.botao}>
@@ -76,4 +76,4 @@ function MostrarKadu({navigation}) {
     );
 }
 
-export default MostrarKadu;
+export default ShowKadu;

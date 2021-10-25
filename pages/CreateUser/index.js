@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ScrollView, Modal } from 'react-native';
-import styles from './estilo';
+import styles from './style';
 import { Formik } from 'formik';
 import * as yup from 'yup';
-import api from '../../services/api';
+import api from '../../src/services/api';
 
 
 const FormValidator = yup.object({
@@ -13,7 +13,7 @@ const FormValidator = yup.object({
     password: yup.string().required('A senha é obrigatório').min(6, 'A senha precisa ter pelo menos 6 caracteres')
 })
 
-function CadastrarUsuario({ navigation }) {
+function CreateUser({ navigation }) {
     const [modalVisible, setModalVisible] = useState(false);
     return (
         <ScrollView style={styles.corpo}>
@@ -34,7 +34,7 @@ function CadastrarUsuario({ navigation }) {
                 validationSchema={FormValidator}
                 onSubmit={async (values, actions) => {
                     try {
-                        //api.post('/user', values);
+                        api.post('/user', values);
                         setModalVisible(true);
                         setTimeout(() => {
                             setModalVisible(false);
@@ -104,4 +104,4 @@ function CadastrarUsuario({ navigation }) {
     );
 }
 
-export default CadastrarUsuario;
+export default CreateUser;

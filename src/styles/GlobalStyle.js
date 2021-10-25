@@ -82,6 +82,12 @@ export default StyleSheet.create({
         flex: 1,
     },
 
+    showCase: {
+        display: "flex",
+        flexDirection: 'row',
+        flexWrap: "wrap"
+    },
+
     successMessage: {
         color: 'green',
         fontWeight: "bold"
@@ -90,6 +96,7 @@ export default StyleSheet.create({
     subTitle : {
         fontSize: 25,
         fontWeight: "bold",
+        marginLeft: 10,
         marginTop: 30,
     },
     
@@ -102,11 +109,29 @@ export default StyleSheet.create({
         flex: 1,
     },
 
+    tag: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingVertical: 5,
+        paddingHorizontal: 15,
+        borderRadius: 35,
+        margin: 5,
+        elevation: 3,
+        backgroundColor: '#C083F0',
+    },
+
     title: {
         fontWeight: "bold",
         fontSize: 55,
         textAlign: "center",
         marginBottom: 25
     },
+
+    userIcon: {
+        backgroundColor: "#C41FFE",
+        borderRadius: 25,
+        height: 50,
+        width:50,
+    }
  
 });

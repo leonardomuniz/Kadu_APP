@@ -4,9 +4,9 @@ import { Formik } from 'formik';
 import * as yup from 'yup';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import styles from '../../styles/GlobalStyle';
-import api from '../../services/api';
-import Button from '../../components/Button';
+import styles from '../../src/styles/GlobalStyle';
+import api from '../../src/services/api';
+import Button from '../../src/components/Button';
 
 
 function Login({ navigation }) {
@@ -58,7 +58,7 @@ function Login({ navigation }) {
                         setAuth(usertoken, userInfo);
                         setError('');
 
-                        navigation.navigate('home');
+                        //navigation.navigate('home');
                     } catch (error) {
                         console.log(error);
                         setError('O e-mail ou senha estão incorretas !');

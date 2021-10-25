@@ -2,27 +2,30 @@ import React, { useState, useEffect } from 'react';
 import { ScrollView, Text, View, TextInput } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import styles from '../../styles/GlobalStyle';
-import localStyles from './styles';
-import Button from '../../components/Button';
-import Kadu from '../../components/Kadu';
+import styles from '../../src/styles/GlobalStyle';
+
+import Button from '../../src/components/Button';
+import Kadu from '../../src/components/Kadu';
 
 function Home({ navigation }) {
     const [hasKadu, setKadu] = useState(true);
-    const [token, setToken] = useState('');
     const [userInfo, setUserInfo] = useState({});
 
-    useEffect(() => {
-        async function getAuth() {
-            const auth = await AsyncStorage.getItem('authToken');
-            const userInfo = JSON.parse(await AsyncStorage.getItem('userCredentials'));
 
-            setToken(auth);
-            setUserInfo(userInfo);
+    useEffect(() => {
+        async function getUserAuth() {
+            const tokenValue = await AsyncStorage.getItem('authToken');
+            const userValue = JSON.parse(await AsyncStorage.getItem('userCredentials'));
+            setUserInfo({
+              token: tokenValue,
+              name: userValue.name,
+              email: userValue.email,
+            });
         };
 
-        getAuth();
+        getUserAuth();
     }, []);
+    
 
 
     return (
@@ -40,7 +43,7 @@ function Home({ navigation }) {
                 </View>
             ) : (
 
-                <View style={localStyles.vitrine}>
+                <View style={styles.showCase}>
                     <Kadu kaduName="Nome do Kadu" kaduFunction={() => navigation.navigate('mostrarKadu')} />
                     <Kadu kaduName="Nome do Kadu" kaduFunction={() => navigation.navigate('mostrarKadu')} />
                     <Kadu kaduName="Nome do Kadu" kaduFunction={() => navigation.navigate('mostrarKadu')} />
