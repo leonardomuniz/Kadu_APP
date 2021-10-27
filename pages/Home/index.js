@@ -17,15 +17,15 @@ function Home({ navigation }) {
             const tokenValue = await AsyncStorage.getItem('authToken');
             const userValue = JSON.parse(await AsyncStorage.getItem('userCredentials'));
             setUserInfo({
-              token: tokenValue,
-              name: userValue.name,
-              email: userValue.email,
+                token: tokenValue,
+                name: userValue.name,
+                email: userValue.email,
             });
         };
 
         getUserAuth();
     }, []);
-    
+
 
 
     return (
@@ -54,8 +54,8 @@ function Home({ navigation }) {
                     <Kadu kaduName="Nome do Kadu" kaduFunction={() => navigation.navigate('mostrarKadu')} />
                 </View>
             )}
-
         </ScrollView>
+
     );
 }
 

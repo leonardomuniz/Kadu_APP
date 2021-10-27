@@ -130,8 +130,9 @@ export default StyleSheet.create({
     userIcon: {
         backgroundColor: "#C41FFE",
         borderRadius: 25,
-        height: 50,
-        width:50,
+        height: 40,
+        margin: 10,
+        width:40,
     }
  
 });
