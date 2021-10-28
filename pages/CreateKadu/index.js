@@ -75,27 +75,27 @@ function CreateKadu({ navigation }) {
     };
 
     async function createKadu() {
-        try {
-            const goals = await calculateGoals();
+        const goals = calculateGoals();
 
-            const kadu = {
-                title: title,
-                description: description,
-                dateInit: initialDate,
-                dateEnd: finalDate,
-                goal: goals,
-                artist: '',
-                themes: themeList
-            }
-
-            await api.post('kadu/', kadu);
-
-            //navigation.navigate('home');
-
-            //console.log(kadu);
-        } catch (error) {
-            console.log(error);
+        const kadu = {
+            title: title,
+            description: description,
+            artist: '6164ccba8a1fe1642688716e',
+            themes: themeList,
+            dateInit: initialDate,
+            dateEnd: finalDate,
+            goal: goals,
         }
+
+        
+        api.post('kadu', kadu);
+
+        navigation.navigate('home');
+        
+        
+
+        //console.log(kadu);
+
     };
 
     useEffect(() => {
@@ -136,7 +136,7 @@ function CreateKadu({ navigation }) {
                 <Text style={styles.subTitle}>Temas</Text>
 
                 <View style={styles.showCase}>
-                    {themes.slice(0, range).map(item => <Kadu key={item._id} kaduName={item.title} kaduFunction={() => setThemeList(() => [...themeList, { id: item._id, name: item.title }])} />)}
+                    {themes.slice(0, range).map(item => <Kadu key={item._id} kaduName={item.title} kaduFunction={() => setThemeList(() => [...themeList, item._id])} />)}
                 </View>
                 <Button textButton="Ver mais" functionButton={() => setRange(range + 5)} />
             </View>
@@ -147,7 +147,7 @@ function CreateKadu({ navigation }) {
             <Text style={localStyle.infoSecundaria}>{description}</Text>
             <Text style={localStyle.infoPrincipal}>Temas: </Text>
             <View style={localStyle.justifyContentLeft}>
-                {themeList.map(item => <Tag key={item.id} tagName={item.name} />)}
+                {themeList.map(item => <Tag key={item} />)}
             </View>
 
             <Button textButton="Finalizar" functionButton={() => createKadu()} />
