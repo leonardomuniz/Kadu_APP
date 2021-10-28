@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { ScrollView, Text, View, TextInput } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -11,6 +11,7 @@ function Home({ navigation }) {
     const [hasKadu, setKadu] = useState(true);
     const [userInfo, setUserInfo] = useState({});
 
+    const user = useContext({});
 
     useEffect(() => {
         async function getUserAuth() {
@@ -22,7 +23,7 @@ function Home({ navigation }) {
                 email: userValue.email,
             });
         };
-
+        //console.log(user)
         getUserAuth();
     }, []);
 
