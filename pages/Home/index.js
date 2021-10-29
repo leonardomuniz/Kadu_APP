@@ -1,31 +1,30 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { ScrollView, Text, View, TextInput } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useIsFocused } from '@react-navigation/native';
 
 import styles from '../../src/styles/GlobalStyle';
-
 import Button from '../../src/components/Button';
 import Kadu from '../../src/components/Kadu';
+import { UserContext } from '../../src/context/User';
 
 function Home({ navigation }) {
     const [hasKadu, setKadu] = useState(true);
-    const [userInfo, setUserInfo] = useState({});
+    const [userCredentials, setUserCredentials] = useState({});
+    const isFocused = useIsFocused();
 
-    const user = useContext({});
+    const { userInfos, setUserInfos } = useContext(UserContext);
+
 
     useEffect(() => {
         async function getUserAuth() {
-            const tokenValue = await AsyncStorage.getItem('authToken');
-            const userValue = JSON.parse(await AsyncStorage.getItem('userCredentials'));
-            setUserInfo({
-                token: tokenValue,
-                name: userValue.name,
-                email: userValue.email,
-            });
+
+            const userValue = JSON.parse(await AsyncStorage.getItem('userInfo'));
+            setUserCredentials(userValue);
         };
-        //console.log(user)
+
         getUserAuth();
-    }, []);
+    }, [isFocused]);
 
 
 
@@ -36,7 +35,7 @@ function Home({ navigation }) {
                 <TextInput style={styles.input} placeholder="Nome" />
             </View>
 
-            <Text style={styles.subTitle}>Aqui estão seus Kadus</Text>
+            <Text style={styles.subTitle}>Aqui estão seus Kadus </Text>
 
             {hasKadu == false ? (
                 <View style={styles.staticBody}>

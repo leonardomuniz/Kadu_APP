@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ScrollView, Text, View } from 'react-native';
+import { useIsFocused } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
@@ -13,27 +14,24 @@ import PictureProfile from '../../src/components/PictureProfile';
 function Profile({ navigation }) {
     const [hasKadu, setKadu] = useState(true);
     const [userInfo, setUserInfo] = useState({});
+    const isFocused = useIsFocused();
 
     useEffect(() => {
         async function getUserAuth() {
-            const tokenValue = await AsyncStorage.getItem('authToken');
-            const userValue = JSON.parse(await AsyncStorage.getItem('userCredentials'));
-            setUserInfo({
-                token: tokenValue,
-                name: userValue.name,
-                email: userValue.email,
-            });
+            const userValue = JSON.parse(await AsyncStorage.getItem('userInfo'));
+            setUserInfo(userValue);
         };
-
         getUserAuth();
-    }, []);
+    }, [isFocused]);
+
+
 
     return (
         <ScrollView style={styles.scrollBody}>
             <View style={styles.staticBody}>
                 <PictureProfile />
                 <Text style={localStyles.infoPrincipal}>{userInfo.name} - elo</Text>
-                <Button textButton="editar perfil" functionButton={() => navigation.navigate('editarPerfil')} />
+                <Button textButton="editarPerfil" functionButton={() => navigation.navigate('editarPerfil')} />
             </View>
 
             {hasKadu == false ? (

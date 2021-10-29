@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { View, Text, TextInput } from 'react-native';
 import { Formik } from 'formik';
-import * as yup from 'yup';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+import { UserContext } from '../../src/context/User';
+import { FormValidator } from '../../src/helpers/FormValidator';
 import styles from '../../src/styles/GlobalStyle';
 import api from '../../src/services/api';
 import Button from '../../src/components/Button';
@@ -11,43 +12,25 @@ import Button from '../../src/components/Button';
 
 function Login({ navigation }) {
     const [error, setError] = useState('');
-    const [userInfo, setUserInfo] = useState({});
-
-    const FormValidator = yup.object({
-        email: yup.string().email('O email precisa ser um email valido').required('O email é obrigatório'),
-        password: yup.string().required('A senha é obrigatório').min(6, 'A senha precisa ter pelo menos 6 letras')
-    })
-
-
-    async function isAuth(){
-        const userInfo = JSON.parse(await AsyncStorage.getItem('userCredentials'));
-        setUserInfo(userInfo);
-    }
-
-    isAuth()
+    const { setUserInfos } = useContext(UserContext);
 
     return (
         <View style={styles.staticBody}>
             <View style={styles.logo} />
-            <Text>{userInfo.name}</Text>
-
             <Formik
                 initialValues={{ email: '', password: '' }}
                 validationSchema={FormValidator}
                 onSubmit={async (values, actions) => {
                     try {
                         const { data } = await api.post('user/auth', values);
-                        const usertoken = data.token;
-                        const userInfo = data.data;
+                        const userInfo = { token: data.token, name: data.data.name, email: data.data.email }
 
                         api.defaults.headers.Authorization = `${data.token}`;
 
-                        const setAuth = async (auth, infos) => {
+                        const setAuth = async (infos) => {
                             try {
-                                const jsonValue = JSON.stringify(infos);
-
-                                await AsyncStorage.setItem('authToken', auth);
-                                await AsyncStorage.setItem('userCredentials', jsonValue);
+                                await AsyncStorage.setItem('userInfo', JSON.stringify(infos));
+                                setUserInfos(infos);
                             } catch (error) {
                                 console.log(error);
                             };
@@ -55,10 +38,8 @@ function Login({ navigation }) {
 
                         actions.resetForm();
 
-                        setAuth(usertoken, userInfo);
+                        setAuth(userInfo);
                         setError('');
-
-                        //navigation.navigate('home');
                     } catch (error) {
                         console.log(error);
                         setError('O e-mail ou senha estão incorretas !');

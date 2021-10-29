@@ -92,9 +92,6 @@ function CreateKadu({ navigation }) {
 
         navigation.navigate('home');
         
-        
-
-        //console.log(kadu);
 
     };
 

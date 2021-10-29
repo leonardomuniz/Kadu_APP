@@ -3,15 +3,10 @@ import { View, Text, TextInput, TouchableOpacity, ScrollView, Modal } from 'reac
 import styles from './style';
 import { Formik } from 'formik';
 import * as yup from 'yup';
+
+import { FormValidator } from '../../src/helpers/FormValidator';
 import api from '../../src/services/api';
 
-
-const FormValidator = yup.object({
-    name: yup.string().required('O nome é obrigatório'),
-    surname: yup.string().required('O sobrenome é obrigatório'),
-    email: yup.string().email('O email precisa ser um email valido').required('O email é obrigatório'),
-    password: yup.string().required('A senha é obrigatório').min(6, 'A senha precisa ter pelo menos 6 caracteres')
-})
 
 function CreateUser({ navigation }) {
     const [modalVisible, setModalVisible] = useState(false);
@@ -44,7 +39,6 @@ function CreateUser({ navigation }) {
                     } catch (erro) {
                         console.log(erro);
                     };
-                    console.log(values);
 
                 }}
             >
