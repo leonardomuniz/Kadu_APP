@@ -14,7 +14,7 @@ import Tag from '../../src/components/Tag';
 function ShowKadu({ navigation }) {
     return (
         <ScrollView style={styles.scrollBody}>
-            <Button textButton="postar desenho" />
+            <Button textButton="postar desenho" functionButton={() => navigation.navigate('postKadu')}/>
             <Text style={localStyle.infoPrincipal}>Nome do Kadu</Text>
             <Text style={localStyle.infoPrincipal}><FontAwesome5 name="calendar-alt" size={24} color="black" /> 01/09/2021 - <FontAwesome5 name="calendar-alt" size={24} color="black" /> 30/09/2021</Text>
             <Text style={localStyle.infoSecundaria}>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</Text>

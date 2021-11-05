@@ -3,14 +3,12 @@ import { ScrollView, Text, View, TextInput } from 'react-native';
 import { useIsFocused } from '@react-navigation/native';
 
 import styles from '../../src/styles/GlobalStyle';
-import Button from '../../src/components/Button';
 import Kadu from '../../src/components/Kadu';
 import { UserContext } from '../../src/context/User';
 import api from '../../src/services/api';
 
 function Home({ navigation }) {
     const [hasKadu, setKadu] = useState(null);
-    const [image, setImage] = useState(null);
     const isFocused = useIsFocused();
 
     const { userInfos } = useContext(UserContext);
@@ -20,7 +18,7 @@ function Home({ navigation }) {
         (async () => {
             try {
                 const { data } = await api.get(`kadu/artist/${userInfos}`);
-                console
+            
                 setKadu(data);
             } catch (error) {
                 console.log(error);
@@ -33,7 +31,7 @@ function Home({ navigation }) {
     return (
         <ScrollView style={styles.scrollBody}>
             <View style={styles.staticBody}>
-                <Button textButton="cadastrar" functionButton={() => navigation.navigate('cadastrarKadu')} />
+                <Text></Text>
                 <TextInput style={styles.input} placeholder="Nome" />
             </View>
 
