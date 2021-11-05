@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { ScrollView, Text, View, TextInput, Platform } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
@@ -6,9 +6,9 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import localStyle from './style';
 import styles from '../../src/styles/GlobalStyle';
 import Button from '../../src/components/Button';
-import Kadu from '../../src/components/Kadu';
 import Tag from '../../src/components/Tag';
 import api from '../../src/services/api';
+import { UserContext } from '../../src/context/User';
 
 
 
@@ -19,12 +19,17 @@ function CreateKadu({ navigation }) {
     const [finalDateMode, setFinalDateMode] = useState('date');
     const [showInitialDate, setShowInitialDate] = useState(false);
     const [showFinalDate, setShowFinalDate] = useState(false);
+
+
     const [goals, setGoals] = useState(0);
     const [themes, setThemes] = useState([]);
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [themeList, setThemeList] = useState([]);
+    const [showThemeList, setShowThemeList] = useState([]);
     const [range, setRange] = useState(5);
+
+    const { userInfos } = useContext(UserContext);
 
 
     const onInitialDateChange = (event, selectedDate) => {
@@ -80,28 +85,39 @@ function CreateKadu({ navigation }) {
         const kadu = {
             title: title,
             description: description,
-            artist: '6164ccba8a1fe1642688716e',
+            artist: userInfos.id,
             themes: themeList,
             dateInit: initialDate,
             dateEnd: finalDate,
             goal: goals,
         }
 
-        
         api.post('kadu', kadu);
 
+        resetForm();
+        getThemes();
         navigation.navigate('home');
         
 
     };
 
+    function resetForm(){
+        setInitialDate(new Date());
+        setFinalDate(new Date());
+        setTitle('');
+        setDescription('');
+        setGoals(0);
+        setShowThemeList([]);
+    };
+
+    async function getThemes() {
+        const { data } = await api.get('theme');
+
+        setThemes(data);
+    };
+
+
     useEffect(() => {
-        async function getThemes() {
-            const { data } = await api.get('theme');
-
-            setThemes(data);
-        };
-
         getThemes();
     }, []);
 
@@ -133,7 +149,11 @@ function CreateKadu({ navigation }) {
                 <Text style={styles.subTitle}>Temas</Text>
 
                 <View style={styles.showCase}>
-                    {themes.slice(0, range).map(item => <Kadu key={item._id} kaduName={item.title} kaduFunction={() => setThemeList(() => [...themeList, item._id])} />)}
+                    {themes.slice(0, range).map((item, index) => <Tag key={item._id} tagName={item.title} tagFunction={() => {
+                        setThemeList(() => [...themeList, item._id]);
+                        setShowThemeList(() => [...showThemeList, {id: item._id, name: item.title}]);
+                        themes.splice(index, 1)
+                    }} />)}
                 </View>
                 <Button textButton="Ver mais" functionButton={() => setRange(range + 5)} />
             </View>
@@ -144,7 +164,7 @@ function CreateKadu({ navigation }) {
             <Text style={localStyle.infoSecundaria}>{description}</Text>
             <Text style={localStyle.infoPrincipal}>Temas: </Text>
             <View style={localStyle.justifyContentLeft}>
-                {themeList.map(item => <Tag key={item} />)}
+                {showThemeList.map(item => <Tag key={item.id} tagName={item.name}/>)}
             </View>
 
             <Button textButton="Finalizar" functionButton={() => createKadu()} />

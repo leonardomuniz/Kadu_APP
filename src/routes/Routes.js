@@ -1,7 +1,8 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useContext } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 import { header, headerWithOutTabs } from '../helpers/Headers';
 import { UserContext } from '../context/User';
@@ -28,6 +29,7 @@ export default function Routes() {
     useEffect(() => {
         getUser();
     }, []);
+
 
 
     return (

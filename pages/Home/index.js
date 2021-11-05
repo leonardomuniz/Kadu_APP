@@ -1,29 +1,31 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { ScrollView, Text, View, TextInput } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useIsFocused } from '@react-navigation/native';
 
 import styles from '../../src/styles/GlobalStyle';
 import Button from '../../src/components/Button';
 import Kadu from '../../src/components/Kadu';
 import { UserContext } from '../../src/context/User';
+import api from '../../src/services/api';
 
 function Home({ navigation }) {
-    const [hasKadu, setKadu] = useState(true);
-    const [userCredentials, setUserCredentials] = useState({});
+    const [hasKadu, setKadu] = useState(null);
+    const [image, setImage] = useState(null);
     const isFocused = useIsFocused();
 
-    const { userInfos, setUserInfos } = useContext(UserContext);
+    const { userInfos } = useContext(UserContext);
 
 
     useEffect(() => {
-        async function getUserAuth() {
-
-            const userValue = JSON.parse(await AsyncStorage.getItem('userInfo'));
-            setUserCredentials(userValue);
-        };
-
-        getUserAuth();
+        (async () => {
+            try {
+                const { data } = await api.get(`kadu/artist/${userInfos}`);
+                console
+                setKadu(data);
+            } catch (error) {
+                console.log(error);
+            }
+        })()
     }, [isFocused]);
 
 
@@ -37,12 +39,7 @@ function Home({ navigation }) {
 
             <Text style={styles.subTitle}>Aqui estão seus Kadus </Text>
 
-            {hasKadu == false ? (
-                <View style={styles.staticBody}>
-                    <Text>  Você ainda não fez Kadus</Text>
-                </View>
-            ) : (
-
+            {hasKadu ? (
                 <View style={styles.showCase}>
                     <Kadu kaduName="Nome do Kadu" kaduFunction={() => navigation.navigate('mostrarKadu')} />
                     <Kadu kaduName="Nome do Kadu" kaduFunction={() => navigation.navigate('mostrarKadu')} />
@@ -52,6 +49,10 @@ function Home({ navigation }) {
                     <Kadu kaduName="Nome do Kadu" kaduFunction={() => navigation.navigate('mostrarKadu')} />
                     <Kadu kaduName="Nome do Kadu" kaduFunction={() => navigation.navigate('mostrarKadu')} />
                     <Kadu kaduName="Nome do Kadu" kaduFunction={() => navigation.navigate('mostrarKadu')} />
+                </View>
+            ) : (
+                <View style={styles.staticBody}>
+                    <Text>  Você ainda não fez Kadus</Text>
                 </View>
             )}
         </ScrollView>

@@ -23,7 +23,7 @@ function Login({ navigation }) {
                 onSubmit={async (values, actions) => {
                     try {
                         const { data } = await api.post('user/auth', values);
-                        const userInfo = { token: data.token, name: data.data.name, email: data.data.email }
+                        const userInfo = { token: data.token, name: data.data.name, email: data.data.email, id: data.data.id }
 
                         api.defaults.headers.Authorization = `${data.token}`;
 

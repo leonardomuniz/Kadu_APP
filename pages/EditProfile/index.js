@@ -17,26 +17,51 @@ import * as yup from 'yup';
 
 function EditProfile({ navigation }) {
     const [userInfo, setUserInfo] = useState({});
+    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
+    const [bio, setBio] = useState('');
+
+    const { userInfos, setUserInfos } = useContext(UserContext);
     const isFocused = useIsFocused();
-    const { setUserInfos } = useContext(UserContext);
 
     useEffect(() => {
-        async function getUserAuth() {
-            try {
-                const userValue = JSON.parse(await AsyncStorage.getItem('userInfo'));
-                setUserInfo(userValue);
-            } catch (error) {
-                console.log(error);
-            }
+        (async () => {
+            const {data} = await api.get(`/user/${userInfos.id}`)
+            setUserInfo(data)
+        })();
+    }, [isFocused, userInfos]);
+
+
+    async function updateUserInfo(){
+        const user ={
+            name: name === '' ? userInfos.name : name,
+            email: email === '' ? userInfos.email : email,
+            bio: bio === '' ? userInfos.bio : bio,
         };
 
-        getUserAuth();
-    }, [isFocused]);
+        setUserInfos({
+            token:userInfos.token,
+            name:  name === '' ? userInfos.name : name,
+            email: email === '' ? userInfos.email : email,
+            id: userInfos.id,
+        });
+
+        await api.put(`user/${userInfos.id}`, user);
+        resetForm();
+        navigation.navigate('profile');
+    };
 
     async function signOut() {
         await AsyncStorage.clear();
-        setUserInfos(null)
+        setUserInfos(null);
+    };
+
+    function resetForm(){
+        setName('');
+        setEmail('');
+        setBio('')
     }
+
 
     return (
         <ScrollView style={styles.scrollBody}>
@@ -48,18 +73,15 @@ function EditProfile({ navigation }) {
 
             <View style={styles.staticBody}>
                 <Text style={styles.subTitle}>Nome:</Text>
-                <TextInput style={styles.input} placeholder={userInfo.name} />
+                <TextInput style={styles.input} placeholder={userInfo.name} onChangeText={setName}/>
 
                 <Text style={styles.subTitle}>E-mail:</Text>
-                <TextInput style={styles.input} placeholder={userInfo.email} />
-
-                <Text style={styles.subTitle}>Senha:</Text>
-                <TextInput style={styles.input} placeholder="senha" secureTextEntry={true} />
+                <TextInput style={styles.input} placeholder={userInfo.email} onChangeText={setEmail}/>
 
                 <Text style={styles.subTitle}>Descrição:</Text>
-                <TextInput style={styles.input} placeholder="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" />
+                <TextInput style={styles.input} placeholder={userInfo.bio} onChangeText={setBio} multiline/>
 
-                <Button textButton="Finalizar" functionButton={() => navigation.navigate('profile')} />
+                <Button textButton="Finalizar" functionButton={updateUserInfo} />
             </View>
 
             <Text></Text>
