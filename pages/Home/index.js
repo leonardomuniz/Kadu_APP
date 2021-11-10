@@ -17,7 +17,7 @@ function Home({ navigation }) {
     useEffect(() => {
         (async () => {
             try {
-                const { data } = await api.get(`kadu/artist/${userInfos}`);
+                const { data } = await api.get(`kadu/artist/${userInfos.id}`);
             
                 setKadu(data);
             } catch (error) {
@@ -39,14 +39,7 @@ function Home({ navigation }) {
 
             {hasKadu ? (
                 <View style={styles.showCase}>
-                    <Kadu kaduName="Nome do Kadu" kaduFunction={() => navigation.navigate('mostrarKadu')} />
-                    <Kadu kaduName="Nome do Kadu" kaduFunction={() => navigation.navigate('mostrarKadu')} />
-                    <Kadu kaduName="Nome do Kadu" kaduFunction={() => navigation.navigate('mostrarKadu')} />
-                    <Kadu kaduName="Nome do Kadu" kaduFunction={() => navigation.navigate('mostrarKadu')} />
-                    <Kadu kaduName="Nome do Kadu" kaduFunction={() => navigation.navigate('mostrarKadu')} />
-                    <Kadu kaduName="Nome do Kadu" kaduFunction={() => navigation.navigate('mostrarKadu')} />
-                    <Kadu kaduName="Nome do Kadu" kaduFunction={() => navigation.navigate('mostrarKadu')} />
-                    <Kadu kaduName="Nome do Kadu" kaduFunction={() => navigation.navigate('mostrarKadu')} />
+                    {hasKadu.map( item => <Kadu key={item._id} kaduName={item.title} kaduFunction={() => navigation.navigate('mostrarKadu')} />)}
                 </View>
             ) : (
                 <View style={styles.staticBody}>

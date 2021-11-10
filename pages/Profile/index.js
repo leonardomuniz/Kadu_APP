@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,useContext } from 'react';
 import { ScrollView, Text, View } from 'react-native';
 import { useIsFocused } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -9,12 +9,30 @@ import localStyles from './styles';
 import Button from '../../src/components/Button';
 import Kadu from '../../src/components/Kadu';
 import PictureProfile from '../../src/components/PictureProfile';
+import { UserContext } from '../../src/context/User';
+import api from '../../src/services/api';
 
 
 function Profile({ navigation }) {
-    const [hasKadu, setKadu] = useState(true);
+    const [hasKadu, setKadu] = useState(null);
     const [userInfo, setUserInfo] = useState({});
     const isFocused = useIsFocused();
+
+
+    const { userInfos } = useContext(UserContext);
+
+    useEffect(() => {
+        (async () => {
+            try {
+                const { data } = await api.get(`kadu/artist/${userInfos.id}`);
+            
+                setKadu(data);
+            } catch (error) {
+                console.log(error);
+            }
+        })()
+    }, [isFocused]);
+
 
     useEffect(() => {
         async function getUserAuth() {
@@ -22,7 +40,9 @@ function Profile({ navigation }) {
             setUserInfo(userValue);
         };
         getUserAuth();
+
     }, [isFocused]);
+
 
 
 
@@ -34,23 +54,15 @@ function Profile({ navigation }) {
                 <Button textButton="editarPerfil" functionButton={() => navigation.navigate('editarPerfil')} />
             </View>
 
-            {hasKadu == false ? (
-                <View style={styles.staticBody}>
-                    <Text>Você ainda não fez Kadus</Text>
+            {hasKadu ? (
+                <View style={styles.showCase}>
+                    {hasKadu.map( item => <Kadu key={item._id} kaduName={item.title} kaduFunction={() => navigation.navigate('mostrarKadu')} />)}
                 </View>
             ) : (
-                <View style={styles.showCase}>
-                    <Kadu kaduName="Nome do Kadu" kaduFunction={() => navigation.navigate('mostrarKadu')} />
-                    <Kadu kaduName="Nome do Kadu" kaduFunction={() => navigation.navigate('mostrarKadu')} />
-                    <Kadu kaduName="Nome do Kadu" kaduFunction={() => navigation.navigate('mostrarKadu')} />
-                    <Kadu kaduName="Nome do Kadu" kaduFunction={() => navigation.navigate('mostrarKadu')} />
-                    <Kadu kaduName="Nome do Kadu" kaduFunction={() => navigation.navigate('mostrarKadu')} />
-                    <Kadu kaduName="Nome do Kadu" kaduFunction={() => navigation.navigate('mostrarKadu')} />
-                    <Kadu kaduName="Nome do Kadu" kaduFunction={() => navigation.navigate('mostrarKadu')} />
-                    <Kadu kaduName="Nome do Kadu" kaduFunction={() => navigation.navigate('mostrarKadu')} />
+                <View style={styles.staticBody}>
+                    <Text>  Você ainda não fez Kadus</Text>
                 </View>
             )}
-
 
             <Text></Text>
         </ScrollView>
