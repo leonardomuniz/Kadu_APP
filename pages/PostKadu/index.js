@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ScrollView, View, Text, Image } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { FontAwesome5 } from '@expo/vector-icons';
@@ -11,7 +11,11 @@ import api from '../../src/services/api';
 
 import { getCameraPermission, getMediaLibraryPermissions } from '../../src/helpers/Permissions';
 
-export default function PostKadu({navigation}) {
+export default function PostKadu({ navigation, route }) {
+    const [kadu, setKadu] = useState({});
+    const [dateInit, setDateInit] = useState('');
+    const [dateEnd, setDateEnd] = useState('');
+    const [goals, setGoals] = useState('');
     const [camera, setCamera] = useState(null);
     const [image, setImage] = useState(null);
     const [erro, setErro] = useState(null);
@@ -57,6 +61,7 @@ export default function PostKadu({navigation}) {
             setErro(null)
             const postBody = {
                 picture: image ? image : camera,
+                kadu:route.params?.kaduId
             };
 
             await api.post('/post/', postBody);
@@ -64,13 +69,43 @@ export default function PostKadu({navigation}) {
         }
     };
 
+
+    function calculateGoals() {
+        const oneDay = 24 * 60 * 60 * 1000;
+        const firstDate = new Date(dateInit);
+        const secondDate = new Date(dateEnd);
+
+        const differenceBetweenDates = Math.round(Math.abs((firstDate - secondDate) / oneDay));
+
+        return differenceBetweenDates;
+    };
+
+    useEffect(() => {
+        (async () => {
+            try {
+                const { data } = await api.get(`kadu/${route.params?.kaduId}`);
+
+                setKadu(data);
+                setDateInit(new Date(data.dateInit).toDateString());
+                setDateEnd(new Date(data.dateEnd).toDateString());
+            } catch (error) {
+                return console.log(error);
+            };
+        })();
+
+        const totalGoals = calculateGoals();
+        setGoals(kadu.goal - totalGoals);
+    }, []);
+
+
     return (
         <ScrollView style={styles.scrollBody}>
             <View style={styles.staticBody}>
 
                 <Text style={localStyle.infoPrincipal}>Tema: { }</Text>
-                <Text style={localStyle.infoPrincipal}>Dia: {new Date().toDateString()} <FontAwesome5 name="calendar-alt" size={24} color="black" /> </Text>
-
+                <Text style={localStyle.infoPrincipal}>
+                    <FontAwesome5 name="calendar-alt" size={24} color="black" /> {dateInit} - <FontAwesome5 name="calendar-alt" size={24} color="black" /> {dateEnd}
+                </Text>
                 <View style={styles.showCase}>
                     <Button textButton="galeria" functionButton={pickImage} />
                     <Button textButton="câmera" functionButton={pickCameraImage} />

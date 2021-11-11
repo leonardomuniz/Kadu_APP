@@ -1,14 +1,22 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { ScrollView, Text, View, TextInput, Platform } from 'react-native';
+import { ScrollView, Text, View, TextInput, Platform, Image } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
-
+import * as ImagePicker from 'expo-image-picker';
 
 import localStyle from './style';
 import styles from '../../src/styles/GlobalStyle';
+import Kadu from '../../src/components/Kadu';
 import Button from '../../src/components/Button';
 import Tag from '../../src/components/Tag';
 import api from '../../src/services/api';
 import { UserContext } from '../../src/context/User';
+import { getMediaLibraryPermissions } from '../../src/helpers/Permissions';
+import imageOne from '../../src/assets/img-01.jpg';
+import imageTwo from '../../src/assets/img-02.jpg';
+import imageThree from '../../src/assets/img-03.jpg';
+import imageFour from '../../src/assets/img-04.jpg';
+import imageFive from '../../src/assets/img-05.jpg';
+import imageSix from '../../src/assets/img-06.jpg';
 
 
 
@@ -28,9 +36,16 @@ function CreateKadu({ navigation }) {
     const [themeList, setThemeList] = useState([]);
     const [showThemeList, setShowThemeList] = useState([]);
     const [range, setRange] = useState(5);
+    const [thumb, setThumb] = useState(null);
 
     const { userInfos } = useContext(UserContext);
 
+    const thumbImageOne = Image.resolveAssetSource(imageOne).uri;
+    const thumbImageTwo = Image.resolveAssetSource(imageTwo).uri;
+    const thumbImageThree = Image.resolveAssetSource(imageThree).uri;
+    const thumbImageFour = Image.resolveAssetSource(imageFour).uri;
+    const thumbImageFive = Image.resolveAssetSource(imageFive).uri;
+    const thumbImageSix = Image.resolveAssetSource(imageSix).uri;
 
     const onInitialDateChange = (event, selectedDate) => {
         const currentDate = selectedDate || date;
@@ -65,8 +80,6 @@ function CreateKadu({ navigation }) {
     };
 
 
-
-
     function calculateGoals() {
         const oneDay = 24 * 60 * 60 * 1000;
         const firstDate = new Date(initialDate);
@@ -76,7 +89,6 @@ function CreateKadu({ navigation }) {
         setGoals(goals)
 
         return differenceBetweenDates;
-
     };
 
     async function createKadu() {
@@ -89,19 +101,24 @@ function CreateKadu({ navigation }) {
             themes: themeList,
             dateInit: initialDate,
             dateEnd: finalDate,
+            thumb: thumb ?  thumb: thumbImageOne,
             goal: goals,
         }
 
-        api.post('kadu', kadu);
+        try{
+            api.post('kadu', kadu);
+        } catch(error){
+            console.log(error);
+        }
 
         resetForm();
         getThemes();
         navigation.navigate('home');
-        
+
 
     };
 
-    function resetForm(){
+    function resetForm() {
         setInitialDate(new Date());
         setFinalDate(new Date());
         setTitle('');
@@ -114,6 +131,21 @@ function CreateKadu({ navigation }) {
         const { data } = await api.get('theme');
 
         setThemes(data);
+    };
+
+    async function pickImage() {
+        getMediaLibraryPermissions();
+
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.All,
+            allowsEditing: true,
+            quality: 1,
+        });
+
+
+        if (!result.cancelled) {
+            setThumb({ uri: result.uri });
+        }
     };
 
 
@@ -151,12 +183,23 @@ function CreateKadu({ navigation }) {
                 <View style={styles.showCase}>
                     {themes.slice(0, range).map((item, index) => <Tag key={item._id} tagName={item.title} tagFunction={() => {
                         setThemeList(() => [...themeList, item._id]);
-                        setShowThemeList(() => [...showThemeList, {id: item._id, name: item.title}]);
+                        setShowThemeList(() => [...showThemeList, { id: item._id, name: item.title }]);
                         themes.splice(index, 1)
                     }} />)}
                 </View>
                 <Button textButton="Ver mais" functionButton={() => setRange(range + 5)} />
+                <Text style={styles.subTitle}>Thumb do kadu</Text>
+                <View style={localStyle.justifyContentLeft}>
+                    <Kadu kaduImage={{ uri: thumbImageOne }} kaduFunction={() => setThumb(thumbImageOne)} />
+                    <Kadu kaduImage={{ uri: thumbImageTwo }} kaduFunction={() => setThumb(thumbImageTwo)} />
+                    <Kadu kaduImage={{ uri: thumbImageThree }} kaduFunction={() => setThumb(thumbImageThree)} />
+                    <Kadu kaduImage={{ uri: thumbImageFour }} kaduFunction={() => setThumb(thumbImageFour)} />
+                    <Kadu kaduImage={{ uri: thumbImageFive }} kaduFunction={() => setThumb(thumbImageFive)} />
+                    <Kadu kaduImage={{ uri: thumbImageSix }} kaduFunction={() => setThumb(thumbImageSix)} />
+                </View>
+                <Button textButton="pegar imagem da galeria" functionButton={pickImage} />
             </View>
+
 
             <Text style={localStyle.infoPrincipal}>Titulo: {title}</Text>
             <Text style={localStyle.infoPrincipal}>{initialDate.toDateString()} - {finalDate.toDateString()}</Text>
@@ -164,11 +207,16 @@ function CreateKadu({ navigation }) {
             <Text style={localStyle.infoSecundaria}>{description}</Text>
             <Text style={localStyle.infoPrincipal}>Temas: </Text>
             <View style={localStyle.justifyContentLeft}>
-                {showThemeList.map(item => <Tag key={item.id} tagName={item.name}/>)}
+                {showThemeList.map(item => <Tag key={item.id} tagName={item.name} />)}
+            </View>
+            <Text style={localStyle.infoPrincipal}>Thumb: </Text>
+
+            <View style={styles.staticBody}>
+                {thumb && <Kadu kaduImage={{uri: thumb}} />}
             </View>
 
             <Button textButton="Finalizar" functionButton={() => createKadu()} />
-
+            <Image source={{ uri: 'fille:///../../src/assets/img-01.jpg' }} />
             <Text></Text>
 
         </ScrollView>

@@ -39,7 +39,7 @@ export default StyleSheet.create({
 
     kadu: {
         backgroundColor: "#5555",
-        borderRadius: 25,
+        borderRadius: 5,
         display: "flex",
         height: 300,
         justifyContent:"flex-end",
@@ -54,6 +54,7 @@ export default StyleSheet.create({
         marginBottom: 15,
         marginLeft: 10,
         textShadowColor: "gray",
+        position: 'absolute',
         zIndex: 99,
     }, 
 

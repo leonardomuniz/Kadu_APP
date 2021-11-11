@@ -1,14 +1,13 @@
-import React, { useState, useEffect,useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { ScrollView, Text, View } from 'react-native';
 import { useIsFocused } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-
 import styles from '../../src/styles/GlobalStyle';
 import localStyles from './styles';
+import PictureProfile from '../../src/components/PictureProfile';
 import Button from '../../src/components/Button';
 import Kadu from '../../src/components/Kadu';
-import PictureProfile from '../../src/components/PictureProfile';
 import { UserContext } from '../../src/context/User';
 import api from '../../src/services/api';
 
@@ -25,7 +24,7 @@ function Profile({ navigation }) {
         (async () => {
             try {
                 const { data } = await api.get(`kadu/artist/${userInfos.id}`);
-            
+
                 setKadu(data);
             } catch (error) {
                 console.log(error);
@@ -56,7 +55,13 @@ function Profile({ navigation }) {
 
             {hasKadu ? (
                 <View style={styles.showCase}>
-                    {hasKadu.map( item => <Kadu key={item._id} kaduName={item.title} kaduFunction={() => navigation.navigate('mostrarKadu')} />)}
+                    {hasKadu.map(item => <Kadu
+                        key={item._id}
+                        kaduName={item.title}
+                        kaduName={item.title}
+                        kaduFunction={() => navigation.navigate('mostrarKadu')}
+                        kaduImage={{ uri: item.thumb }}
+                    />).reverse()}
                 </View>
             ) : (
                 <View style={styles.staticBody}>

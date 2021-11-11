@@ -11,7 +11,7 @@ export default StyleSheet.create({
 
 
     infoPrincipal: {
-        fontSize: 25,
+        fontSize: 20,
         fontWeight: "bold",
         marginVertical: 10,
         textAlign: "center"
