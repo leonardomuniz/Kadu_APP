@@ -41,7 +41,7 @@ function TabScreens() {
         >
             <Tab.Screen name="home" component={Home} options={tabHeaderUser} />
             <Tab.Screen name="cadastrarKadu" component={CreateKadu} options={tabHeaderUser} />
-            <Tab.Screen name="profile" component={Profile} options={{ headerTitle: 'home' }} />
+            <Tab.Screen name="profile" component={Profile} options={tabHeaderUser} />
         </Tab.Navigator>
     );
 };

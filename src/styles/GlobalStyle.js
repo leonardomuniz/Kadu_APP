@@ -95,8 +95,9 @@ export default StyleSheet.create({
     },
 
     subTitle : {
-        fontSize: 25,
+        fontSize: 30,
         fontWeight: "bold",
+        marginBottom: 15,
         marginLeft: 10,
         marginTop: 30,
     },

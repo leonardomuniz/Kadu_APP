@@ -19,17 +19,12 @@ import imageFive from '../../src/assets/img-05.jpg';
 import imageSix from '../../src/assets/img-06.jpg';
 
 
+export default function CreateKadu({ navigation }) {
+    const [date, setInitialDate] = useState(new Date());
+    const [mode, setMode] = useState('date');
+    const [show, setShow] = useState(false);
 
-function CreateKadu({ navigation }) {
-    const [initialDate, setInitialDate] = useState(new Date());
-    const [finalDate, setFinalDate] = useState(new Date());
-    const [initialDateMode, setInitialDateMode] = useState('date');
-    const [finalDateMode, setFinalDateMode] = useState('date');
-    const [showInitialDate, setShowInitialDate] = useState(false);
-    const [showFinalDate, setShowFinalDate] = useState(false);
-
-
-    const [goals, setGoals] = useState(0);
+    const [goals, setGoals] = useState(null);
     const [themes, setThemes] = useState([]);
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
@@ -40,87 +35,53 @@ function CreateKadu({ navigation }) {
 
     const { userInfos } = useContext(UserContext);
 
-    const thumbImageOne = Image.resolveAssetSource(imageOne).uri;
-    const thumbImageTwo = Image.resolveAssetSource(imageTwo).uri;
-    const thumbImageThree = Image.resolveAssetSource(imageThree).uri;
-    const thumbImageFour = Image.resolveAssetSource(imageFour).uri;
-    const thumbImageFive = Image.resolveAssetSource(imageFive).uri;
-    const thumbImageSix = Image.resolveAssetSource(imageSix).uri;
+    const thumbImage = [
+        Image.resolveAssetSource(imageOne).uri,
+        Image.resolveAssetSource(imageTwo).uri,
+        Image.resolveAssetSource(imageThree).uri,
+        Image.resolveAssetSource(imageFour).uri,
+        Image.resolveAssetSource(imageFive).uri,
+        Image.resolveAssetSource(imageSix).uri
+    ];
 
-    const onInitialDateChange = (event, selectedDate) => {
+    const onDateChange = (event, selectedDate) => {
         const currentDate = selectedDate || date;
-        setShowInitialDate(Platform.OS === 'ios');
+        setShow(Platform.OS === 'ios');
         setInitialDate(currentDate);
     };
 
-    const onFinalDateChange = (event, selectedDate) => {
-        const currentDate = selectedDate || date;
-        setShowFinalDate(Platform.OS === 'ios');
-        setFinalDate(currentDate);
+    const showMode = (currentMode) => {
+        setShow(true);
+        setMode(currentMode);
     };
 
-
-    const showInitialDateMode = (currentMode) => {
-        setShowInitialDate(true);
-        setInitialDateMode(currentMode);
-    };
-
-    const showFinalDateMode = (currentMode) => {
-        setShowFinalDate(true);
-        setFinalDateMode(currentMode);
-    };
-
-
-    const showInitialDatepicker = () => {
-        showInitialDateMode('date');
-    };
-
-    const showFinalDatepicker = () => {
-        showFinalDateMode('date');
-    };
-
-
-    function calculateGoals() {
-        const oneDay = 24 * 60 * 60 * 1000;
-        const firstDate = new Date(initialDate);
-        const secondDate = new Date(finalDate);
-
-        const differenceBetweenDates = Math.round(Math.abs((firstDate - secondDate) / oneDay));
-        setGoals(goals)
-
-        return differenceBetweenDates;
-    };
+    const showDatepicker = () => showMode('date');
 
     async function createKadu() {
-        const goals = calculateGoals();
+        const totalGoals = goals === null ? 0: parseInt(goals)
+        const userDate = new Date(date);
+        userDate.setDate(userDate.getDate() + totalGoals)
 
         const kadu = {
             title: title,
             description: description,
             artist: userInfos.id,
             themes: themeList,
-            dateInit: initialDate,
-            dateEnd: finalDate,
-            thumb: thumb ?  thumb: thumbImageOne,
-            goal: goals,
-        }
+            dateInit: date,
+            dateEnd: userDate,
+            thumb: thumb ? thumb : thumbImage[0],
+            goal: totalGoals,
+        };
 
-        try{
-            api.post('kadu', kadu);
-        } catch(error){
-            console.log(error);
-        }
+        title !== '' ? await api.post('kadu', kadu): null
 
         resetForm();
         getThemes();
         navigation.navigate('home');
-
-
     };
 
     function resetForm() {
         setInitialDate(new Date());
-        setFinalDate(new Date());
         setTitle('');
         setDescription('');
         setGoals(0);
@@ -142,44 +103,26 @@ function CreateKadu({ navigation }) {
             quality: 1,
         });
 
-
         if (!result.cancelled) {
-            setThumb({ uri: result.uri });
+            setThumb(result.uri);
         }
     };
 
-
-    useEffect(() => {
-        getThemes();
-    }, []);
-
-
-
+    useEffect(() => {getThemes();}, []);
 
     return (
         <ScrollView style={styles.scrollBody}>
-
+            {show && <DateTimePicker value={date} mode={mode} display="default" onChange={onDateChange} />}
             <Text style={styles.title}>Criar Kadu</Text>
-            <Text style={styles.subTitle}>Informações</Text>
 
             <View style={styles.staticBody}>
                 <TextInput style={styles.input} placeholder="Nome do Kadu" onChangeText={setTitle} value={title} />
-                <TextInput style={styles.input} placeholder="Descrição" secureTextEntry={true} onChangeText={setDescription} value={description} multiline />
+                <TextInput style={styles.input} placeholder="Descrição" onChangeText={setDescription} value={description} multiline />
+                <TextInput style={styles.input} placeholder="Meta" onChangeText={setGoals}  keyboardType='numeric' />
+                <Text style={localStyle.infoPrincipal}>{date.toDateString()}</Text>
+                <Button textButton="Data inicial" functionButton={showDatepicker} />
 
-                <View style={styles.showCase}>
-                    <Button textButton="inicio" functionButton={showInitialDatepicker} />
-                    <Button textButton="Fim" functionButton={showFinalDatepicker} />
-                </View>
-
-                <Text style={localStyle.infoPrincipal}>{initialDate.toDateString()} - {finalDate.toDateString()}</Text>
-
-                {showInitialDate && <DateTimePicker value={initialDate} mode={initialDateMode} display="default" onChange={onInitialDateChange} />}
-                {showFinalDate && <DateTimePicker value={finalDate} mode={finalDateMode} display="default" onChange={onFinalDateChange} />}
-
-
-
-                <Text style={styles.subTitle}>Temas</Text>
-
+                <Text style={styles.subTitle}>Temas:</Text>
                 <View style={styles.showCase}>
                     {themes.slice(0, range).map((item, index) => <Tag key={item._id} tagName={item.title} tagFunction={() => {
                         setThemeList(() => [...themeList, item._id]);
@@ -188,39 +131,21 @@ function CreateKadu({ navigation }) {
                     }} />)}
                 </View>
                 <Button textButton="Ver mais" functionButton={() => setRange(range + 5)} />
-                <Text style={styles.subTitle}>Thumb do kadu</Text>
+
+                <Text style={styles.subTitle}>Thumb:</Text>
                 <View style={localStyle.justifyContentLeft}>
-                    <Kadu kaduImage={{ uri: thumbImageOne }} kaduFunction={() => setThumb(thumbImageOne)} />
-                    <Kadu kaduImage={{ uri: thumbImageTwo }} kaduFunction={() => setThumb(thumbImageTwo)} />
-                    <Kadu kaduImage={{ uri: thumbImageThree }} kaduFunction={() => setThumb(thumbImageThree)} />
-                    <Kadu kaduImage={{ uri: thumbImageFour }} kaduFunction={() => setThumb(thumbImageFour)} />
-                    <Kadu kaduImage={{ uri: thumbImageFive }} kaduFunction={() => setThumb(thumbImageFive)} />
-                    <Kadu kaduImage={{ uri: thumbImageSix }} kaduFunction={() => setThumb(thumbImageSix)} />
+                    {thumbImage.map((item, index) => <Kadu key={index} kaduImage={{ uri: item }} kaduFunction={() => setThumb(item)} />)}
                 </View>
                 <Button textButton="pegar imagem da galeria" functionButton={pickImage} />
             </View>
 
+            <Text style={localStyle.infoPrincipal}>Temas escolhidos: </Text>
+            <View style={localStyle.justifyContentLeft}>{showThemeList.map(item => <Tag key={item.id} tagName={item.name} />)}</View>
 
-            <Text style={localStyle.infoPrincipal}>Titulo: {title}</Text>
-            <Text style={localStyle.infoPrincipal}>{initialDate.toDateString()} - {finalDate.toDateString()}</Text>
-            <Text style={localStyle.infoPrincipal}>Descrição:</Text>
-            <Text style={localStyle.infoSecundaria}>{description}</Text>
-            <Text style={localStyle.infoPrincipal}>Temas: </Text>
-            <View style={localStyle.justifyContentLeft}>
-                {showThemeList.map(item => <Tag key={item.id} tagName={item.name} />)}
-            </View>
             <Text style={localStyle.infoPrincipal}>Thumb: </Text>
-
-            <View style={styles.staticBody}>
-                {thumb && <Kadu kaduImage={{uri: thumb}} />}
-            </View>
+            <View style={styles.staticBody}>{thumb && <Kadu kaduImage={{ uri: thumb }} />}</View>
 
             <Button textButton="Finalizar" functionButton={() => createKadu()} />
-            <Image source={{ uri: 'fille:///../../src/assets/img-01.jpg' }} />
-            <Text></Text>
-
         </ScrollView>
     );
-}
-
-export default CreateKadu;
+};

@@ -22,4 +22,9 @@ export const headerTab = {
 }
 
 
-export const tabHeaderUser = { headerTitle: 'logo', headerRight: () => <UserIcon /> }
+export const tabHeaderUser = {  
+    headerStyle: { backgroundColor: "#E5E5E5" },
+    headerShadowVisible: false,
+    headerTitle: 'logo', 
+    headerRight: () => <UserIcon /> 
+}
