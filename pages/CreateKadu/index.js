@@ -19,6 +19,7 @@ import imageFive from '../../src/assets/img-05.jpg';
 import imageSix from '../../src/assets/img-06.jpg';
 
 
+
 export default function CreateKadu({ navigation }) {
     const [date, setInitialDate] = useState(new Date());
     const [mode, setMode] = useState('date');
@@ -60,7 +61,7 @@ export default function CreateKadu({ navigation }) {
     async function createKadu() {
         const totalGoals = goals === null ? 0: parseInt(goals)
         const userDate = new Date(date);
-        userDate.setDate(userDate.getDate() + totalGoals)
+        userDate.setDate(userDate.getDate() + totalGoals);
 
         const kadu = {
             title: title,

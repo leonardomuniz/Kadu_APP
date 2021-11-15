@@ -10,9 +10,6 @@ import api from '../../src/services/api';
 import { UserContext } from '../../src/context/User';
 import Button from '../../src/components/Button';
 
-import { Formik } from 'formik';
-import * as yup from 'yup';
-
 
 
 function EditProfile({ navigation }) {

@@ -14,6 +14,8 @@ export const headerWithOutTabs = {
     title: '',
 };
 
+
+
 export const headerTab = {
     headerStyle: { backgroundColor: "#E5E5E5" },
     headerShadowVisible: false,
@@ -22,9 +24,9 @@ export const headerTab = {
 }
 
 
-export const tabHeaderUser = {  
+export const tabHeaderUser = {
     headerStyle: { backgroundColor: "#E5E5E5" },
     headerShadowVisible: false,
-    headerTitle: 'logo', 
-    headerRight: () => <UserIcon /> 
+    headerTitle: 'logo',
+    headerRight: () => <UserIcon />
 }

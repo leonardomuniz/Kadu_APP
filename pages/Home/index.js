@@ -18,7 +18,7 @@ function Home({ navigation }) {
         (async () => {
             try {
                 const { data } = await api.get(`kadu/artist/${userInfos.id}`);
-
+                
                 setKadu(data);
             } catch (error) {
                 console.log(error);
@@ -43,7 +43,7 @@ function Home({ navigation }) {
                         key={item._id}
                         kaduName={item.title}
                         kaduName={item.title}
-                        kaduFunction={() => navigation.navigate('mostrarKadu', {kaduId: item._id})}
+                        kaduFunction={() => navigation.navigate('showKadu', {kaduId: item._id})}
                         kaduImage={{ uri: item.thumb }}
                     />).reverse()}
                 </View>

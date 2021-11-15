@@ -50,7 +50,7 @@ function Profile({ navigation }) {
             <View style={styles.staticBody}>
                 <PictureProfile />
                 <Text style={localStyles.infoPrincipal}>{userInfo.name} - elo</Text>
-                <Button textButton="editarPerfil" functionButton={() => navigation.navigate('editarPerfil')} />
+                <Button textButton="editarPerfil" functionButton={() => navigation.navigate('editProfile')} />
             </View>
 
             {hasKadu ? (
@@ -59,7 +59,7 @@ function Profile({ navigation }) {
                         key={item._id}
                         kaduName={item.title}
                         kaduName={item.title}
-                        kaduFunction={() => navigation.navigate('mostrarKadu')}
+                        kaduFunction={() => navigation.navigate('showKadu')}
                         kaduImage={{ uri: item.thumb }}
                     />).reverse()}
                 </View>
